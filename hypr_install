@@ -1,0 +1,211 @@
+#!/bin/bash
+
+prep=(
+    qt5-wayland
+    qt6-wayland
+    qt5ct
+    qt6ct
+    gtk3
+    gtk4
+    polkit-kde-agent
+    pacman-contrib
+)
+
+packages=(
+    hyprland
+    hyprpaper
+    hypridle
+    hyprlock
+    waybar
+    wlogout
+    xdg-desktop-portal-hyprland
+    wofi
+    uwsm
+    thunar
+    dunst
+    kitty
+    grim
+    slurp
+    wl-clipboard
+    cliphist
+    brightnessctl
+    jq
+    alacritty
+    bluez
+    bluez-utils
+    nano
+    vim
+    openssh
+    papirus-icon-theme 
+    btop
+    wget
+    iwd
+    firefox
+    wireless_tools
+    wpa_supplicant
+    smartmontools
+    xdg-utils
+    breeze-gtk
+    ttf-jetbrains-mono
+    ttf-font-awesome
+    noto-fonts
+    mpv
+    thunderbird
+    gnome-disk-utility
+    networkmanager-applet
+    lxappearance
+    sddm
+)
+
+pipewire=(
+    pipewire
+    wireplumber
+    pipewire-alsa
+    pipewire-jack
+    pipewire-pulse
+    gst-plugin-pipewire
+    libpulse
+)
+
+pulseaudio=(
+    pulseaudio
+)
+
+CNT="[\e[1;36mNOTE\e[0m]"
+COK="[\e[1;32mOK\e[0m]"
+CER="[\e[1;31mERROR\e[0m]"
+CAT="[\e[1;37mATTENTION\e[0m]"
+CWR="[\e[1;35mWARNING\e[0m]"
+CAC="[\e[1;33mACTION\e[0m]"
+INSTLOG="$HOME/install.log"
+show_progress() {
+    while ps | grep $1 &> /dev/null;
+    do
+        echo -n "."
+        sleep 2
+    done
+    echo -en "Done!\n"
+    sleep 2
+}
+
+install_software() {
+    if yay -Q $1 &>> /dev/null ; then
+        echo -e "$COK - $1 is already installed."
+    else
+        echo -en "$CNT - Now installing $1 ."
+        yay -S --noconfirm $1 &>> $INSTLOG &
+        show_progress $!
+        if yay -Q $1 &>> /dev/null ; then
+            echo -e "\e[1A\e[K$COK - $1 was installed."
+        else
+            echo -e "\e[1A\e[K$CER - $1 install had failed, please check the install.log"
+            exit
+        fi
+    fi
+}
+
+read -rep $'[\e[1;33mACTION\e[0m] - Would you like to continue with the install (y,n) ' CONTINST
+if [[ $CONTINST == "Y" || $CONTINST == "y" ]]; then
+    echo -e "$CNT - Setup starting..."
+else
+    echo -e "$CNT - This script will now exit, no changes were made to your system."
+    exit
+fi
+
+if [ ! -f /sbin/yay ]; then
+    echo -en "$CNT - Configuering yay."
+    git clone https://aur.archlinux.org/yay.git &>> $INSTLOG
+    cd yay
+    makepkg -si --noconfirm &>> ../$INSTLOG &
+    show_progress $!
+    if [ -f /sbin/yay ]; then
+        echo -e "\e[1A\e[K$COK - yay configured"
+        cd ..
+        
+        echo -en "$CNT - Updating yay."
+        yay -Suy --noconfirm &>> $INSTLOG &
+        show_progress $!
+        echo -e "\e[1A\e[K$COK - yay updated."
+    else
+        echo -e "\e[1A\e[K$CER - yay install failed, please check the install.log"
+        exit
+    fi
+fi
+
+read -rep $'[\e[1;33mACTION\e[0m] - Would you like to install the packages? (y,n) ' INST
+if [[ $INST == "Y" || $INST == "y" ]]; then
+
+    echo -e "$CNT - Prep Stage - Installing needed components, this may take a while..."
+    for SOFTWR in ${prep[@]}; do
+        install_software "$SOFTWR" 
+    done
+
+    echo -e "$CNT - Installing main components, this may take a while..."
+    for SOFTWR in ${packages[@]}; do
+        install_software "$SOFTWR" 
+    done
+
+    read -rep $'[\e[1;33mACTION\e[0m] - Would you like to install pipewire or pulseaudio? (pipewire,pulseaudio,n) ' AUDIO
+    if [[ $AUDIO == "pipewire" ]]; then
+        for SOFTWR in ${pipewire[@]}; do
+            install_software "$SOFTWR" 
+    elif [[ $AUDIO == "pulseaudio" ]]; then
+        for SOFTWR in ${pulseaudio[@]}; do
+            install_software "$SOFTWR" 
+        done
+    else
+        echo -e "$CNT - No audio packages will be installed."
+    fi
+
+    echo -e "$CNT - Starting the Bluetooth Service..."
+    sudo systemctl enable --now bluetooth.service &>> $INSTLOG
+    sleep 2
+
+    echo -e "$CNT - Enabling the SDDM Service..."
+    sudo systemctl enable sddm &>> $INSTLOG
+    sleep 2
+    
+    echo -e "$CNT - Cleaning out conflicting xdg portals..."
+    yay -R --noconfirm xdg-desktop-portal-gnome xdg-desktop-portal-gtk &>> $INSTLOG
+fi
+
+read -rep $'[\e[1;33mACTION\e[0m] - Would you like to copy config files? (y,n) ' CFG
+if [[ $CFG == "Y" || $CFG == "y" ]]; then
+    echo -e "$CNT - Copying config files..."
+
+    cp -R dotconfig $HOME/.config/
+
+    for DIR in hypr kitty dunst waybar wlogout wofi
+    do 
+        DIRPATH=$HOME/.config/$DIR
+        if [ -d "$DIRPATH" ]; then 
+            echo -e "$CAT - Config for $DIR located, backing up."
+            mv $DIRPATH $DIRPATH-back &>> $INSTLOG
+            echo -e "$COK - Backed up $DIR to $DIRPATH-back."
+        fi
+
+        mkdir -p $DIRPATH &>> $INSTLOG
+    done
+
+    echo -e "$CNT - Setting up the new config..." 
+    cp $HOME/.config/dotconfig/* $HOME/.config/
+
+    # Copy the SDDM theme
+    # echo -e "$CNT - Setting up the login screen."
+    # sudo cp -R Extras/sdt /usr/share/sddm/themes/
+    # sudo chown -R $USER:$USER /usr/share/sddm/themes/sdt
+    # sudo mkdir /etc/sddm.conf.d
+    # echo -e "[Theme]\nCurrent=sdt" | sudo tee -a /etc/sddm.conf.d/10-theme.conf &>> $INSTLOG
+    # WLDIR=/usr/share/wayland-sessions
+    # if [ -d "$WLDIR" ]; then
+    #     echo -e "$COK - $WLDIR found"
+    # else
+    #     echo -e "$CWR - $WLDIR NOT found, creating..."
+    #     sudo mkdir $WLDIR
+    # fi 
+
+    xfconf-query -c xsettings -p /Net/ThemeName -s "Adwaita-dark"
+    xfconf-query -c xsettings -p /Net/IconThemeName -s "Papirus-Dark"
+    gsettings set org.gnome.desktop.interface gtk-theme "Adwaita-dark"
+    gsettings set org.gnome.desktop.interface icon-theme "Papirus-Dark"
+fi

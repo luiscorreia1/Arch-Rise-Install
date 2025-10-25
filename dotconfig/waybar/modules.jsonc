@@ -1,0 +1,183 @@
+{
+    // "custom/appsmenu": {
+    //     "format": "Apps",
+    //     "on-click": "wofi --show drun -replace",
+    //     "on-click-right": "~/.config/hypr/scripts/keybindings.sh",
+    //     "tooltip": false
+    // },
+
+    "hyprland/workspaces" : {
+        "on-click": "activate",
+        "active-only": false,
+        "all-outputs": true,
+        "format": "{}",
+        "format-icons": {
+			"urgent": "",
+			"active": "",
+			"default": ""
+        }
+        // "persistent-workspaces": {
+        //      "*": 3
+        // }
+    },
+
+    "hyprland/window": {
+        "rewrite": {
+            "(.*) - Discord": "$1",
+            "(.*) - Visual Studio Code": "$1",
+            "(.*) - Google Chrome": "$1",
+            "(.*) — Mozilla Firefox": "$1",
+            // "(.*) - Discord": "Discord",
+            // "(.*) - Visual Studio Code": "VScode",
+            // "(.*) - Google Chrome": "Google Chrome",
+            "(.*) - Brave": "$1",
+            "(.*) - Chromium": "$1",
+            "(.*) - Brave Search": "$1",
+            "(.*) - Outlook": "$1"
+        },
+        "separate-outputs": true
+    },
+
+    "temperature": {
+  	// "thermal-zone": 2,
+    	// "hwmon-path": "/sys/class/hwmon/hwmon2/temp1_input",
+    	// "critical-threshold": 80,
+    	// "format-critical": "{temperatureC}°C ",
+    	"format": "{temperatureC}°C ",
+	"on-click":"kitty -e btop"
+    },
+    "battery": {
+	"interval": 1, 
+        "format": "{icon} {capacity}%",
+        "format-charging": "  {capacity}%",
+        "format-plugged": "  {capacity}%",
+        "format-alt": "{icon} {time}",
+        "format-icons": ["", "", "", "", ""]
+    },
+    "clock": {
+	"interval": 1,
+	"format": "{:%B %d, %H:%M:%S}",
+	// "tooltip": false
+       "tooltip-format": "<tt><small>{calendar}</small></tt>",
+       "calendar": {
+                   "mode"          : "year",
+                   "mode-mon-col"  : 3,
+                //    "weeks-pos"     : "right",
+                   "on-scroll"     : 1,
+                   "format": {
+                             "months":     "<span color='#ffead3'><b>{}</b></span>",
+                             "days":       "<span color='#ecc6d9'><b>{}</b></span>",
+                             "weeks":      "<span color='#99ffdd'><b>W{}</b></span>",
+                             "weekdays":   "<span color='#ffcc66'><b>{}</b></span>",
+                             "today":      "<span color='#ff6699'><b><u>{}</u></b></span>"
+                             }
+                   },
+       "actions":  {
+                   "on-click-right": "mode",
+                //    "on-scroll-up": "tz_up",
+                //    "on-scroll-down": "tz_down",
+                   "on-scroll-up": "shift_up",
+                   "on-scroll-down": "shift_down"
+                   }
+    },
+
+    "network": {
+        "format": "{ifname}",
+        "format-wifi": "  {ipaddr}",
+        "format-ethernet": "  {ipaddr}",
+        "format-disconnected": "Not connected", //An empty format will hide the module.
+        "tooltip-format": " {ifname} via {gwaddri}",
+        "tooltip-format-wifi": "   {essid} ({signalStrength}%)",
+        "tooltip-format-ethernet": "  {ifname} ({ipaddr}/{cidr})",
+        "tooltip-format-disconnected": "Disconnected",
+        "max-length": 50,
+        "on-click": "kitty -e nmtui"
+    },
+    "custom/exit": {
+        "format": "",
+        "on-click": "wlogout",
+        "tooltip": false
+    },
+    "keyboard-state": {
+        "numlock": true,
+        "capslock": true,
+        "format": "{name} {icon}",
+        "format-icons": {
+            "locked": "",
+            "unlocked": ""
+        }
+    },
+    "cpu": {
+        "format": " {usage}%",
+        "on-click": "kitty -e btop"
+    },
+
+    // Memory
+    "memory": {
+        "format": " {}%",
+        "on-click": "kitty -e btop"
+    },
+
+    // Harddisc space used
+    "disk": {
+        "interval": 30,
+        "format": " {percentage_used}%",
+        "path": "/",
+        "on-click": "kitty -e btop"
+    },
+    "bluetooth": {
+        "format": " {status}",
+        "format-connected": " {device_alias}",
+        "format-connected-battery": " {device_alias} {device_battery_percentage}%",
+        // "format-device-preference": [ "device1", "device2" ], // preference list deciding the displayed device
+        "tooltip-format": "{controller_alias}\t{controller_address}\n\n{num_connections} connected",
+        "tooltip-format-connected": "{controller_alias}\t{controller_address}\n\n{num_connections} connected\n\n{device_enumerate}",
+        "tooltip-format-enumerate-connected": "{device_alias}\t{device_address}",
+        "tooltip-format-enumerate-connected-battery": "{device_alias}\t{device_address}\t{device_battery_percentage}%",
+        "on-click":"kitty -e bluetoothctl"
+    },
+    "group/hardware": {
+        "orientation": "horizontal",
+        "drawer": {
+            "transition-duration": 300,
+            "children-class": "not-memory",
+            "transition-left-to-right": false
+        },
+        "modules": [
+            "custom/hardware-wrap",
+            // "custom/system",
+            "cpu",
+            "memory",
+            "disk",
+            "temperature",
+            "backlight"
+            // "hyprland/language"
+        ]
+    }, 
+    "backlight": {
+        "device": "amdgpu_bl1",
+        "format": " {percent}%",
+	"tooltip": false
+    },
+
+    "custom/hardware-wrap": {
+        "format": "Hardware",
+        "tooltip-format": "Hardware group"
+    } 
+//    "disk/root": {
+//        "interval": 30,
+//        "format": " DR {percentage_used}% ",
+//        "path": "/",
+//        "on-click": "kitty -e btop"
+//    },
+
+
+//    "disk/home": {
+//        "interval": 30,
+//        "format": " DH {percentage_used}% ",
+//        "path": "/home",
+//        "on-click": "kitty -e btop"
+//    },
+
+
+}

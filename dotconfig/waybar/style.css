@@ -1,0 +1,130 @@
+* {
+    border: none;
+    border-radius: 0;
+    font-family: JetBrains Mono;
+    font-size: 14px;
+    min-height: 0;
+}
+
+window#waybar {
+    background: rgba(0,0,0,0);
+
+}
+
+tooltip {
+    border-radius: 5px;
+    background-color: rgb(43, 49, 68);
+    opacity: 0.7;
+    padding: 20px;
+    margin: 0px;
+}
+
+tooltip label {
+    color: rgb(160,159,182);
+}
+
+/* #custom-appsmenu {
+    background: rgb(43, 49, 68);
+    border-radius: 5px;
+    color: rgb(160,159,182);
+    padding: 4px 10px;
+    margin: 10px 10px 0px;
+} */
+
+#workspaces {
+    background: rgb(43, 49, 68);
+    color: rgba(0,0,0,0);
+    border-radius: 5px;
+    padding: 4px 5px;
+    margin: 10px 10px 0px;  
+}
+
+#workspaces button {
+    color: rgb(160,159,182);
+}
+
+#workspaces button.active {
+    color: rgb(145,146,166);
+    background: rgb(87,90,110);
+    border-radius: 5px;
+    transition: all 0.2s ease-in-out;
+}
+
+#workspaces button:hover {
+    color: rgb(43, 49, 68);
+    background: rgba(160,159,182,1);
+    border-radius: 5px;
+    box-shadow: none;
+    text-shadow: none;
+}
+
+#window {
+    background: rgb(160,159,182);
+    border-radius: 25px;
+    color: rgb(43,49,68);
+    padding: 4px 10px;
+    margin: 10px 0px 0px;
+}
+
+window#waybar.empty #window {
+    background-color: transparent;
+}
+
+#network {
+    background: rgb(43, 49, 68);
+    color: rgb(160,159,182);
+    border-radius: 5px;
+    padding: 4px 10px;
+    margin: 10px 5px 0px;  
+}
+
+#language {
+    background: rgb(43, 49, 68);
+    color: rgb(160,159,182);
+    border-radius: 5px;
+    padding: 4px 10px;
+    margin: 10px 5px 0px;  
+}
+
+#clock {
+    background: rgb(43, 49, 68);
+    color: rgb(160,159,182);
+    border-radius: 5px;
+    padding: 4px 10px;
+    margin: 10px 5px 0px;  
+}
+
+
+#battery {
+    background: rgb(43, 49, 68);
+    color: rgb(160,159,182);
+    border-radius: 5px;
+    padding: 4px 10px;
+    margin: 10px 5px 0px;  
+}
+
+#bluetooth {
+    background: rgb(43, 49, 68);
+    color: rgb(160,159,182);
+    border-radius: 5px;
+    padding: 4px 10px;
+    margin: 10px 5px 0px;  
+}
+
+#cpu , #memory, #disk, #temperature, #backlight, #custom-hardware-wrap{
+    background: rgb(43, 49, 68);
+    color: rgb(160,159,182);
+    border-radius: 5px;
+    padding: 4px 10px;
+    margin: 10px 5px 0px ;  
+}
+
+
+#custom-exit {
+    background: rgb(43, 49, 68);
+    color: rgb(160,159,182);
+    border-radius: 5px;
+    padding: 4px 10px;
+    margin: 10px 10px 0px 5px;  
+}
+
