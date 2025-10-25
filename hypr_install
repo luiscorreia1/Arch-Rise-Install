@@ -149,6 +149,7 @@ if [[ $INST == "Y" || $INST == "y" ]]; then
     if [[ $AUDIO == "pipewire" ]]; then
         for SOFTWR in ${pipewire[@]}; do
             install_software "$SOFTWR" 
+        done
     elif [[ $AUDIO == "pulseaudio" ]]; then
         for SOFTWR in ${pulseaudio[@]}; do
             install_software "$SOFTWR" 
