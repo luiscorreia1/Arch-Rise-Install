@@ -116,7 +116,7 @@ if [ ! -f /sbin/yay ]; then
     echo -en "$CNT - Configuering yay."
     git clone https://aur.archlinux.org/yay.git &>> $INSTLOG
     cd yay
-    makepkg -si --noconfirm &>> ../$INSTLOG &
+    makepkg -si --noconfirm &>> $INSTLOG &
     show_progress $!
     if [ -f /sbin/yay ]; then
         echo -e "\e[1A\e[K$COK - yay configured"
