@@ -52,11 +52,12 @@ packages=(
     mpv
     thunderbird
     gnome-disk-utility
-    networkmanager-applet
     lxappearance
     sddm
 )
-
+packages=(
+    network-manager-applet
+)
 pipewire=(
     pipewire
     wireplumber
@@ -96,6 +97,22 @@ install_software() {
         yay -S --noconfirm $1 &>> $INSTLOG &
         show_progress $!
         if yay -Q $1 &>> /dev/null ; then
+            echo -e "\e[1A\e[K$COK - $1 was installed."
+        else
+            echo -e "\e[1A\e[K$CER - $1 install had failed, please check the install.log"
+            exit
+        fi
+    fi
+}
+
+install_software_pacman() {
+    if pacman -Qi $1 &>> /dev/null; then
+        echo -e "$COK - $1 is already installed."
+    else
+        echo -en "$CNT - Now installing $1 ."
+        pacman -Sy --noconfirm $1 &>> $INSTLOG &
+        show_progress $!
+        if pacman -Qi $1 &>> /dev/null; then
             echo -e "\e[1A\e[K$COK - $1 was installed."
         else
             echo -e "\e[1A\e[K$CER - $1 install had failed, please check the install.log"
@@ -144,6 +161,17 @@ if [[ $INST == "Y" || $INST == "y" ]]; then
     for SOFTWR in ${packages[@]}; do
         install_software "$SOFTWR" 
     done
+
+    echo -e "$CNT - Installing main pacman components, this may take a while..."
+    for SOFTWR in ${packages[@]}; do
+        install_software_pacman "$SOFTWR" 
+    done
+
+
+
+
+    echo -e "$CNT - Installing NetworkManager ..."
+    sudo pacman -S network-manager-applet
 
     read -rep $'[\e[1;33mACTION\e[0m] - Would you like to install pipewire or pulseaudio? (pipewire,pulseaudio,n) ' AUDIO
     if [[ $AUDIO == "pipewire" ]]; then
