@@ -202,7 +202,6 @@ read -rep $'[\e[1;33mACTION\e[0m] - Would you like to copy config files? (y,n) '
 if [[ $CFG == "Y" || $CFG == "y" ]]; then
     echo -e "$CNT - Copying config files..."
 
-    cp -r "$(pwd)/dotconfig" "$HOME/.config/"
 
     for DIR in hypr kitty dunst waybar wlogout wofi
     do 
@@ -217,7 +216,7 @@ if [[ $CFG == "Y" || $CFG == "y" ]]; then
     done
 
     echo -e "$CNT - Setting up the new config..." 
-    cp $HOME/.config/dotconfig/* $HOME/.config/
+    cp -r "$(pwd)/dotconfig" "$HOME/.config/"
 
     # Copy the SDDM theme
     # echo -e "$CNT - Setting up the login screen."
@@ -237,4 +236,13 @@ if [[ $CFG == "Y" || $CFG == "y" ]]; then
     # xfconf-query -c xsettings -p /Net/IconThemeName -s "Papirus-Dark"
     gsettings set org.gnome.desktop.interface gtk-theme "Adwaita-dark"
     gsettings set org.gnome.desktop.interface icon-theme "Papirus-Dark"
+fi
+
+echo -e "$CNT - Script had completed!"
+
+read -rep $'[\e[1;33mACTION\e[0m] - Would you like to start Hyprland now? (y,n) ' HYP
+if [[ $HYP == "Y" || $HYP == "y" ]]; then
+    exec sudo systemctl start sddm &>> $INSTLOG
+else
+    exit
 fi
