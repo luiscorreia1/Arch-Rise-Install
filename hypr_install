@@ -202,7 +202,7 @@ read -rep $'[\e[1;33mACTION\e[0m] - Would you like to copy config files? (y,n) '
 if [[ $CFG == "Y" || $CFG == "y" ]]; then
     echo -e "$CNT - Copying config files..."
 
-    cp -R dotconfig $HOME/.config/
+    cp -r dotconfig $HOME/.config/
 
     for DIR in hypr kitty dunst waybar wlogout wofi
     do 
@@ -233,8 +233,8 @@ if [[ $CFG == "Y" || $CFG == "y" ]]; then
     #     sudo mkdir $WLDIR
     # fi 
 
-    xfconf-query -c xsettings -p /Net/ThemeName -s "Adwaita-dark"
-    xfconf-query -c xsettings -p /Net/IconThemeName -s "Papirus-Dark"
+    # xfconf-query -c xsettings -p /Net/ThemeName -s "Adwaita-dark"
+    # xfconf-query -c xsettings -p /Net/IconThemeName -s "Papirus-Dark"
     gsettings set org.gnome.desktop.interface gtk-theme "Adwaita-dark"
     gsettings set org.gnome.desktop.interface icon-theme "Papirus-Dark"
 fi
