@@ -12,6 +12,8 @@ prep=(
 )
 
 packages=(
+    network-manager-applet
+    sddm
     hyprland
     hyprpaper
     hypridle
@@ -53,11 +55,10 @@ packages=(
     thunderbird
     gnome-disk-utility
     lxappearance
-    sddm
 )
-packages=(
-    network-manager-applet
-)
+# packages=(
+
+# )
 pipewire=(
     pipewire
     wireplumber
@@ -154,18 +155,18 @@ if [[ $INST == "Y" || $INST == "y" ]]; then
 
     echo -e "$CNT - Prep Stage - Installing needed components, this may take a while..."
     for SOFTWR in ${prep[@]}; do
-        install_software "$SOFTWR" 
+        install_software_pacman "$SOFTWR" 
     done
 
     echo -e "$CNT - Installing main components, this may take a while..."
     for SOFTWR in ${packages[@]}; do
-        install_software "$SOFTWR" 
-    done
-
-    echo -e "$CNT - Installing main pacman components, this may take a while..."
-    for SOFTWR in ${packages[@]}; do
         install_software_pacman "$SOFTWR" 
     done
+
+    # echo -e "$CNT - Installing main pacman components, this may take a while..."
+    # for SOFTWR in ${packages[@]}; do
+    #     install_software_pacman "$SOFTWR" 
+    # done
 
 
 
